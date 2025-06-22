@@ -20,6 +20,13 @@
     pkgs.git
   ];
 
+  virtualisation.virtualbox.guest.enable = true;
+
+  fileSystems."/srv/webDav" = {
+    device = "webDav";
+    fsType = "vboxsf";
+  };
+
   users.users.root.openssh.authorizedKeys.keys = [
     # change this to your ssh key
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE9cZDQjzlmMTw2PStQMWlk+XbLfP4KMKeKM3C9izsyf kvineet@kvineet-pc"
