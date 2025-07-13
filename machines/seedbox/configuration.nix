@@ -13,6 +13,7 @@
     ../../features/podman
     ../../features/podman/services/jellyfin
     ../../features/podman/services/torrent
+    ../../features/podman/services/home-assistant
   ];
   boot.loader.systemd-boot.enable = true;
   services.openssh.enable = true;

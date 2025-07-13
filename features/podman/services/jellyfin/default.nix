@@ -17,7 +17,7 @@
       ];
       pull = "always";
       labels = {
-        "in.kvineet.seedbox.torrent.service" = "jellyfin";
+        "in.kvineet.seedbox.service" = "jellyfin";
       };
       hostname = "jellyfin";
     };

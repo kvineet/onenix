@@ -24,7 +24,7 @@ in
       ];
       pull = "always";
       labels = {
-        "in.kvineet.seedbox.torrent.service" = "prowlarr";
+        "in.kvineet.seedbox.service" = "prowlarr";
       };
       hostname = "prowlarr";
     };
@@ -40,7 +40,7 @@ in
       ];
       pull = "always";
       labels = {
-        "in.kvineet.seedbox.torrent.service" = "radarr";
+        "in.kvineet.seedbox.service" = "radarr";
       };
       hostname = "radarr";
     };
@@ -58,7 +58,7 @@ in
       ];
       pull = "always";
       labels = {
-        "in.kvineet.seedbox.torrent.service" = "sonarr";
+        "in.kvineet.seedbox.service" = "sonarr";
       };
       hostname = "sonarr";
     };
@@ -75,7 +75,7 @@ in
       ];
       pull = "always";
       labels = {
-        "in.kvineet.seedbox.torrent.service" = "transmission";
+        "in.kvineet.seedbox.service" = "transmission";
       };
       hostname = "transmission";
     };
@@ -88,7 +88,7 @@ in
       };
       pull = "always";
       labels = {
-        "in.kvineet.seedbox.torrent.service" = "flaresolverr";
+        "in.kvineet.seedbox.service" = "flaresolverr";
       };
       hostname = "flaresolverr";
     };
