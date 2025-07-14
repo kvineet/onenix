@@ -12,8 +12,12 @@
       autoStart = true;
       volumes = [
         "/root/home-assistant:/config"
-        "/etc/localtime:/etc/localtime:ro"
         "/run/dbus:/run/dbus:ro"
+      ];
+      ports = [ "8123:8123" ];
+      extraOptions = [
+        "--network=host"
+        "--cap-add=CAP_NET_RAW"
       ];
       pull = "always";
       labels = {
@@ -22,5 +26,9 @@
       hostname = "homeassistant";
     };
   };
-
+  networking.firewall = {
+    allowedTCPPorts = [
+      8123
+    ];
+  };
 }
