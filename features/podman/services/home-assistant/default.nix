@@ -26,6 +26,9 @@
       hostname = "homeassistant";
     };
   };
+  systemd.tmpfiles.rules = [
+    "d /root/home-assistant 1777 root root"
+  ];
   networking.firewall = {
     allowedTCPPorts = [
       8123

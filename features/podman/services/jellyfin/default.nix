@@ -22,4 +22,7 @@
       hostname = "jellyfin";
     };
   };
+  systemd.tmpfiles.rules = [
+    "d /root/Jellyfin 1777 root root"
+  ];
 }

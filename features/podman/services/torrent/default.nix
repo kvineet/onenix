@@ -6,6 +6,8 @@
 }:
 let
   commonEnv = {
+    PUID = "1000";
+    PGID = "1000";
     TZ = "Asia/Kolkata";
     LANGUAGE = "en_US.UTF-8";
     LANG = "en_US.UTF-8";
@@ -93,4 +95,10 @@ in
       hostname = "flaresolverr";
     };
   };
+  systemd.tmpfiles.rules = [
+    "d /root/torrents/transmission 1777 root root"
+    "d /root/torrents/prowlarr 1777 root root"
+    "d /root/torrents/sonarr 1777 root root"
+    "d /root/torrents/radarr 1777 root root"
+  ];
 }
