@@ -29,6 +29,11 @@
       "gid=1000"
     ];
   };
-
+  systemd.sleep.extraConfig = ''
+    AllowSuspend=no
+    AllowHibernation=no
+    AllowHybridSleep=no
+    AllowSuspendThenHibernate=no
+  '';
   system.stateVersion = "24.05";
 }
