@@ -1,0 +1,9 @@
+keys:
+  - &admin_kvineet age1533nlwfhcqld8kcmrw4qgemfa827rp7scllrh4vg8qsww3xawdfsxs870g
+  - &seedbox age1x89nqs7s88h5l67ah3naqpcayhu033e5u4thx5u2933gaz9j3swsthlwga
+creation_rules:
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *admin_kvineet
+      - *seedbox

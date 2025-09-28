@@ -1,0 +1,13 @@
+* onenix
+Be one with the Nix
+
+
+** TODO
+*** TODO Secret management with =sops=
+*** TODO cloudflare tunnel
+*** TODO migrate PC
+*** TODO migrate VPC
+**** TODO [[ https://github.com/NixOS/nixpkgs/tree/master/nixos/maintainers/scripts/azure-new][Checkout]]
+**** TODO Create a new VM
+**** TODO setup services
+**** TODO retire old VM

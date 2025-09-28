@@ -11,7 +11,9 @@
     ./disk-config.nix
     ../common/configuration.nix
     ../../features/podman
-    ../../features/podman/services/jellyfin
+    ../../features/podman/services/cloudflare
+    # ../../features/podman/services/jellyfin
+    ../../features/services/jellyfin.nix
     ../../features/podman/services/torrent
     ../../features/podman/services/home-assistant
   ];
@@ -29,6 +31,7 @@
       "gid=1000"
     ];
   };
+  powerManagement.enable = false;
   systemd.sleep.extraConfig = ''
     AllowSuspend=no
     AllowHibernation=no
