@@ -1,0 +1,26 @@
+# intentionally ephemeral
+.cache
+.local/state
+.local/share/yakuake/yakuakestaterc
+.local/share/systemsettings
+
+# managed by nix
+.zshenv
+.config/zsh
+.config/zsh-abbr
+
+.local/share/zinit
+
+# regular folders
+Desktop
+Documents
+Downloads
+Music
+Pictures
+Public
+Templates
+Videos
+accounting
+go
+projects
+sync

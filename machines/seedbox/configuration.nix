@@ -10,6 +10,7 @@
     (modulesPath + "/profiles/qemu-guest.nix")
     ./disk-config.nix
     ../common/configuration.nix
+    ../common/configuration-beta.nix
     ../../features/podman
     ../../features/podman/services/cloudflare
     # ../../features/podman/services/jellyfin

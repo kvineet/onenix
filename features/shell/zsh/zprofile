@@ -1,0 +1,2 @@
+# Include .profile
+[[ -f "$HOME/.profile" ]] && source "$HOME/.profile"

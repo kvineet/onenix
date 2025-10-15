@@ -1,0 +1,12 @@
+[Appearance]
+Skin=dracula
+SkinInstalledWithKns=true
+
+[Desktop Entry]
+DefaultProfile=Yakuake.profile
+
+[Dialogs]
+FirstRun=false
+
+[Window]
+Width=100
