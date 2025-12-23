@@ -22,10 +22,11 @@
     config = { };
   };
   home.packages = with pkgs; [
-      kdePackages.kate
-      vscode-fhs
+    kdePackages.kate
+    vscode-fhs
   ];
   programs.zsh.zsh-abbr.abbreviations = {
+    rebuild = "sudo nixos-rebuild --flake ${globals.dirs.dotdir}#pc switch";
     hm = "home-manager switch --flake ${globals.dirs.dotdir}#pc";
   };
 }

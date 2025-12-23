@@ -73,7 +73,14 @@
             nixos-wsl.nixosModules.default
             {
               system.stateVersion = "25.05";
-              wsl.enable = true;
+              wsl = {
+                enable = true;
+                defaultUser = "${globals.username}";
+                docker-desktop.enable = true;
+                wslConf = {
+                  user.default = "${globals.username}";
+                };
+              };
             }
             ./machines/msft/configuration.nix
             # TODO sops-nix.nixosModules.sops

@@ -26,6 +26,7 @@
     vscode-fhs
   ];
   programs.zsh.zsh-abbr.abbreviations = {
-    hm = "home-manager switch --flake ${globals.dirs.dotdir}#pc";
+    rebuild = "sudo nixos-rebuild --flake ${globals.dirs.dotdir}#msft switch";
+    hm = "home-manager switch --flake ${globals.dirs.dotdir}#msft";
   };
 }

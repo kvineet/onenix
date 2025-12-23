@@ -10,8 +10,9 @@
   xdg.dataFile = {
     "zinit/zinit.git".source = builtins.fetchGit {
       url = "https://github.com/zdharma-continuum/zinit.git";
-      ref = "v3.13.1";
-      rev = "30514edc4a3e67229ce11306061ee92db9558cec";
+      ref = "v3.14.0";
+      allRefs = true;
+      rev = "5c0c0454deeb9eac95e08ef214b5d7ba6859db14";
     };
   };
   xdg.configFile.p10k = {

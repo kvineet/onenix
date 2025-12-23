@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  wsl,
   ...
 }:
 
@@ -10,6 +11,7 @@
     # Include the results of the hardware scan.
     ../common/configuration.nix
   ];
+
   networking.hostName = "msft"; # Define your hostname.
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
