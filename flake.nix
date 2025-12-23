@@ -2,6 +2,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -26,6 +27,7 @@
     {
       nixpkgs,
       nixpkgs-unstable,
+      nixos-wsl,
       nixgl,
       home-manager,
       plasma-manager,
@@ -49,36 +51,57 @@
       };
     in
     {
-      nixosConfigurations.seedbox = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          disko.nixosModules.disko
-          ./machines/seedbox/configuration.nix
-          sops-nix.nixosModules.sops
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.sharedModules = [ plasma-manager.homeModules.plasma-manager ];
-            home-manager.users.${globals.username} = ./machines/seedbox/home.nix;
-          }
-        ];
-      };
-      nixosConfigurations.pc = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          # TODO disko.nixosModules.disko
-          ./machines/pc/configuration.nix
-          # TODO sops-nix.nixosModules.sops
-          home-manager.nixosModules.home-manager
-          {
-            # home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.${globals.username} = ./machines/pc/home.nix;
-            home-manager.sharedModules = [ plasma-manager.homeModules.plasma-manager ];
-            home-manager.extraSpecialArgs = { inherit globals; };
-          }
-        ];
+      nixosConfigurations = {
+        seedbox = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            disko.nixosModules.disko
+            ./machines/seedbox/configuration.nix
+            sops-nix.nixosModules.sops
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.sharedModules = [ plasma-manager.homeModules.plasma-manager ];
+              home-manager.users.${globals.username} = ./machines/seedbox/home.nix;
+            }
+          ];
+        };
+        msft = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            nixos-wsl.nixosModules.default
+            {
+              system.stateVersion = "25.05";
+              wsl.enable = true;
+            }
+            ./machines/msft/configuration.nix
+            # TODO sops-nix.nixosModules.sops
+            home-manager.nixosModules.home-manager
+            {
+              # home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.${globals.username} = ./machines/msft/home.nix;
+              home-manager.extraSpecialArgs = { inherit globals; };
+            }
+          ];
+        };
+        pc = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            # TODO disko.nixosModules.disko
+            ./machines/pc/configuration.nix
+            # TODO sops-nix.nixosModules.sops
+            home-manager.nixosModules.home-manager
+            {
+              # home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.${globals.username} = ./machines/pc/home.nix;
+              home-manager.sharedModules = [ plasma-manager.homeModules.plasma-manager ];
+              home-manager.extraSpecialArgs = { inherit globals; };
+            }
+          ];
+        };
       };
     };
 }
