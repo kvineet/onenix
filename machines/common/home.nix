@@ -55,6 +55,7 @@
   home = {
     stateVersion = "23.05";
     packages = with pkgs; [
+      rar
       fzf
       jq
       yq-go

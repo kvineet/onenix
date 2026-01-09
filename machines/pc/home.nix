@@ -24,6 +24,7 @@
   home.packages = with pkgs; [
     kdePackages.kate
     vscode-fhs
+    yt-dlp
   ];
   programs.zsh.zsh-abbr.abbreviations = {
     rebuild = "sudo nixos-rebuild --flake ${globals.dirs.dotdir}#pc switch";
