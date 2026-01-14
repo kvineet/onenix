@@ -65,9 +65,31 @@
 
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
-  services.xserver = {
-    enable = true;
-    videoDrivers = [ "amdgpu" ];
+  services = {
+    xserver = {
+      enable = true;
+      videoDrivers = [ "amdgpu" ];
+    };
+    transmission = {
+      enable = true; # Enable transmission daemon
+      openRPCPort = true; # Open firewall for RPC
+      settings = {
+        # Override default settings
+        rpc-bind-address = "0.0.0.0"; # Bind to own IP
+        rpc-whitelist = "127.0.0.1"; # Whitelist your remote machine (10.0.0.1 in this example)
+      };
+    };
+    sonarr = {
+      enable = false;
+      openFirewall = true;
+      user = "kvineet";
+      group = "users";
+      dataDir = "/home/kvineet/Downloads/";
+    };
+    prowlarr = {
+      enable = false;
+      openFirewall = true;
+    };
   };
 
   # Enable the KDE Plasma Desktop Environment.

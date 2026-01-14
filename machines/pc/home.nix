@@ -25,7 +25,10 @@
     kdePackages.kate
     vscode-fhs
     yt-dlp
+    stremio
+    mpv
   ];
+
   programs.zsh.zsh-abbr.abbreviations = {
     rebuild = "sudo nixos-rebuild --flake ${globals.dirs.dotdir}#pc switch";
     hm = "home-manager switch --flake ${globals.dirs.dotdir}#pc";
