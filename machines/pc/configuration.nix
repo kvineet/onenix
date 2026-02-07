@@ -140,6 +140,7 @@
     clinfo
     kdePackages.yakuake
     lact
+    fusee-nano
   ];
 
   systemd.packages = with pkgs; [ lact ];
