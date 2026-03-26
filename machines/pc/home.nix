@@ -26,6 +26,7 @@
     vscode-fhs
     yt-dlp
     # stremio
+    stremio-linux-shell
     mpv
     telegram-desktop
     nicotine-plus

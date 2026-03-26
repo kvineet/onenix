@@ -31,7 +31,7 @@
   };
   programs.zsh = {
     enable = true;
-    dotDir = ".config/zsh";
+    dotDir = "${config.xdg.configHome}/zsh";
     initContent = builtins.readFile ./zshrc;
   };
   # For some reason home manager imports "${HOME}/.nix-profile/etc/profile.d/hm-session-vars.sh"
