@@ -21,11 +21,11 @@
   boot.initrd.kernelModules = [ "amdgpu" ];
   hardware.graphics.extraPackages = with pkgs; [
     rocmPackages.clr.icd
-    amdvlk
+    # amdvlk
   ];
-  hardware.graphics.extraPackages32 = with pkgs; [
-    driversi686Linux.amdvlk
-  ];
+  # hardware.graphics.extraPackages32 = with pkgs; [
+  #   driversi686Linux.amdvlk
+  # ];
   hardware.graphics.enable32Bit = true; # For 32 bit applications
   hardware.bluetooth.enable = true;
   networking.hostName = "nixos"; # Define your hostname.
@@ -71,6 +71,7 @@
       videoDrivers = [ "amdgpu" ];
     };
     transmission = {
+      package = pkgs.transmission_4;
       enable = true; # Enable transmission daemon
       openRPCPort = true; # Open firewall for RPC
       settings = {

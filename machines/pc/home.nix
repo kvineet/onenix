@@ -25,8 +25,10 @@
     kdePackages.kate
     vscode-fhs
     yt-dlp
-    stremio
+    # stremio
     mpv
+    telegram-desktop
+    nicotine-plus
   ];
 
   programs.zsh.zsh-abbr.abbreviations = {

@@ -22,7 +22,7 @@
   home = {
     packages = with pkgs; [
       zsh
-      python3Full
+      python3
       zinit
     ];
     sessionVariables = {
