@@ -81,25 +81,27 @@
         controlPath = "~/.ssh/master-%r@%n:%p";
         controlPersist = "no";
       };
+      "github.com-kvineet" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = "~/.ssh/id_ed25519";
+      };
+      "gitlab.com-kvineet" = {
+        hostname = "gitlab.com";
+        user = "git";
+        identityFile = "~/.ssh/id_ed25519";
+      };
+      "github.com-engineerwolf" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = "~/.ssh/id_ed25519_engineerwolf";
+      };
+      "gitlab.com-engineerwolf" = {
+        hostname = "gitlab.com";
+        user = "git";
+        identityFile = "~/.ssh/id_ed25519_engineerwolf";
+      };
     };
-    extraConfig = ''
-      Host github.com-kvineet
-           HostName github.com
-           User git
-           IdentityFile ~/.ssh/id_ed25519
-      Host gitlab.com-kvineet
-           HostName gitlab.com
-           User git
-           IdentityFile ~/.ssh/id_ed25519
-      Host github.com-engineerwolf
-           HostName github.com
-           User git
-           IdentityFile ~/.ssh/id_engineerwolf
-      Host gitlab.com-engineerwolf
-           HostName gitlab.com
-           User git
-           IdentityFile ~/.ssh/id_engineerwolf
-    '';
   };
   programs.git.includes = [
     {
