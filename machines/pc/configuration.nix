@@ -142,6 +142,14 @@
     kdePackages.yakuake
     lact
     fusee-nano
+    (retroarch.withCores (
+      cores: with cores; [
+        nestopia
+        bsnes-mercury-balanced
+        dosbox-pure
+      ]
+    ))
+    # retroarch-full
   ];
 
   systemd.packages = with pkgs; [ lact ];

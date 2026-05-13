@@ -23,6 +23,7 @@
   };
   home.packages = with pkgs; [
     kdePackages.kate
+    kdePackages.kdenlive
     vscode-fhs
     yt-dlp
     # stremio
