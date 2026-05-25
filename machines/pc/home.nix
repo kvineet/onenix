@@ -31,6 +31,8 @@
     mpv
     telegram-desktop
     nicotine-plus
+    openttd-jgrpp
+    oscar
   ];
 
   programs.zsh.zsh-abbr.abbreviations = {
