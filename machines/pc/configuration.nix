@@ -19,15 +19,21 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.initrd.kernelModules = [ "amdgpu" ];
-  hardware.graphics.extraPackages = with pkgs; [
-    rocmPackages.clr.icd
-    # amdvlk
-  ];
+  hardware = {
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+      extraPackages = with pkgs; [
+        rocmPackages.clr.icd
+      ];
+    };
+    bluetooth = {
+      enable = true;
+    };
+  };
   # hardware.graphics.extraPackages32 = with pkgs; [
   #   driversi686Linux.amdvlk
   # ];
-  hardware.graphics.enable32Bit = true; # For 32 bit applications
-  hardware.bluetooth.enable = true;
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -40,6 +46,7 @@
 
   programs.steam = {
     enable = true;
+    gamescopeSession.enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
     localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
@@ -134,23 +141,30 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    #  wget
-    git
-    clinfo
-    kdePackages.yakuake
-    lact
-    fusee-nano
-    (retroarch.withCores (
-      cores: with cores; [
-        nestopia
-        bsnes-mercury-balanced
-        dosbox-pure
-      ]
-    ))
-    # retroarch-full
-  ];
+  environment = {
+    sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+      SDL_VIDEODRIVER = "wayland,x11";
+    };
+    systemPackages = with pkgs; [
+      #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+      #  wget
+      git
+      clinfo
+      kdePackages.yakuake
+      lact
+      fusee-nano
+      (retroarch.withCores (
+        cores: with cores; [
+          nestopia
+          bsnes-mercury-balanced
+          dosbox-pure
+        ]
+      ))
+      # retroarch-full
+    ];
+  };
+
   services.joycond.enable = true;
 
   systemd.packages = with pkgs; [ lact ];
