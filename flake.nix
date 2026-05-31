@@ -16,6 +16,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    flatpaks.url = "github:in-a-dil-emma/declarative-flatpak/latest";
     nixgl.url = "github:nix-community/nixGL";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -28,6 +29,7 @@
       nixpkgs,
       nixpkgs-unstable,
       nixos-wsl,
+      flatpaks,
       nixgl,
       home-manager,
       plasma-manager,
@@ -38,6 +40,7 @@
     }@inputs:
     let
       # overlays = [ nixgl.overlay ];
+      system = "x86_64-linux";
       globals = {
         username = "kvineet";
         winUser = "vinekulkarni";
@@ -53,7 +56,7 @@
     {
       nixosConfigurations = {
         seedbox = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          system = system;
           modules = [
             disko.nixosModules.disko
             ./machines/seedbox/configuration.nix
@@ -68,7 +71,7 @@
           ];
         };
         msft = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          system = system;
           modules = [
             nixos-wsl.nixosModules.default
             {
@@ -94,7 +97,7 @@
           ];
         };
         pc = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          system = system;
           modules = [
             # TODO disko.nixosModules.disko
             ./machines/pc/configuration.nix
