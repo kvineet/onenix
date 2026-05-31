@@ -9,6 +9,7 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ../common/configuration.nix
+    ../../modules/amethyst.nix
   ];
 
   # Bootloader.
@@ -132,9 +133,14 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  # Install firefox.
-  programs.firefox.enable = true;
-  programs.kdeconnect.enable = true;
+  programs = {
+    firefox.enable = true;
+    kdeconnect.enable = true;
+    appimage = {
+      enable = true;
+      binfmt = true;
+    };
+  };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
