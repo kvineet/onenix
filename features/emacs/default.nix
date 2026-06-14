@@ -52,7 +52,7 @@ in
       nil
       nixd
       nodejs
-      nixfmt-rfc-style
+      nixfmt
       nerd-fonts.iosevka
       nerd-fonts.iosevka-term
       nerd-fonts.iosevka-term-slab
