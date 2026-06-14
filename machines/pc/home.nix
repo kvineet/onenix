@@ -33,6 +33,7 @@
     nicotine-plus
     openttd-jgrpp
     oscar
+    bottles
   ];
 
   programs.zsh.zsh-abbr.abbreviations = {
