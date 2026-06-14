@@ -4,7 +4,7 @@
     pkgs.cloudflared
   ];
   programs.ssh = {
-    matchBlocks = {
+    settings = {
       "ssh.kvineet.in" = {
         user = "azureuser";
         match = ''host ssh.kvineet.in exec "${pkgs.cloudflared}/bin/cloudflared access ssh-gen --hostname %h"'';

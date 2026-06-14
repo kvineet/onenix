@@ -7,8 +7,14 @@
     ./lsd
   ];
 
-  programs.neovim.enable = true;
-  programs.neovim.defaultEditor = true;
+  programs = {
+    neovim = {
+      enable = true;
+      defaultEditor = true;
+      withRuby = false;
+      withPython3 = false;
+    };
+  };
   home = {
     packages = with pkgs; [
       shellcheck
