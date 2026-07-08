@@ -34,6 +34,8 @@
     openttd-jgrpp
     oscar
     bottles
+    obsidian
+    google-chrome
   ];
 
   programs.zsh.zsh-abbr.abbreviations = {

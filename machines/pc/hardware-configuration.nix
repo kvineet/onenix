@@ -22,8 +22,13 @@
     "sd_mod"
   ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
+  boot.kernelModules = [
+    "kvm-amd"
+    "v4l2loopback"
+  ];
+  boot.extraModulePackages = [
+    pkgs.linuxPackages_latest.v4l2loopback
+  ];
 
   fileSystems = {
     "/" = {

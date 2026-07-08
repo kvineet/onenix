@@ -160,6 +160,9 @@
           dosbox-pure
         ]
       ))
+      linuxPackages.v4l2loopback
+      v4l-utils
+      gopro-tool
       # retroarch-full
     ];
   };
@@ -171,6 +174,11 @@
     "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
   ];
 
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = [ "kvineet" ];
+  virtualisation.virtualbox.host.enableExtensionPack = true;
+  virtualisation.virtualbox.guest.enable = true;
+  virtualisation.virtualbox.guest.dragAndDrop = true;
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;

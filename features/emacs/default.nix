@@ -19,7 +19,11 @@ in
     ./doom.nix
   ];
   programs.emacs.enable = false;
-  services.emacs.enable = true;
+  services.emacs = {
+    enable = true;
+    socketActivation.enable = true;
+    startWithUserSession = "graphical";
+  };
   home = {
     packages = with pkgs; [
       # ...various
@@ -80,19 +84,19 @@ in
     "en" = "emacs -nw";
     "et" = "emacsclient -t";
   };
-  xdg.configFile = {
-    emacsServiceOverride = {
-      target = "systemd/user/emacs.service.d/override.conf";
-      text = ''
-        [Unit]
-        After=graphical-session.target
+  # xdg.configFile = {
+  #   emacsServiceOverride = {
+  #     target = "systemd/user/emacs.service.d/override.conf";
+  #     text = ''
+  #       [Unit]
+  #       After=graphical-session.target
 
-        [Install]
-        WantedBy=
-        WantedBy=graphical-session.target
-      '';
-    };
-  };
+  #       [Install]
+  #       WantedBy=
+  #       WantedBy=graphical-session.target
+  #     '';
+  #   };
+  # };
   xdg.dataFile = {
     "applications/org-protocol.desktop".text = ''
       [Desktop Entry]
