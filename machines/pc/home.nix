@@ -36,6 +36,7 @@
     bottles
     obsidian
     google-chrome
+    zoom-us
   ];
 
   programs.zsh.zsh-abbr.abbreviations = {
