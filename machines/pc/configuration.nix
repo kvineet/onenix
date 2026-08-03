@@ -173,12 +173,14 @@
   systemd.tmpfiles.rules = [
     "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
   ];
+  networking.firewall.allowedUDPPorts = [ 8554 ];
 
-  virtualisation.virtualbox.host.enable = true;
-  users.extraGroups.vboxusers.members = [ "kvineet" ];
-  virtualisation.virtualbox.host.enableExtensionPack = true;
-  virtualisation.virtualbox.guest.enable = true;
-  virtualisation.virtualbox.guest.dragAndDrop = true;
+  #virtualisation.virtualbox.host.enable = true;
+  #users.extraGroups.vboxusers.members = [ "kvineet" ];
+  #virtualisation.virtualbox.host.enableExtensionPack = true;
+  #virtualisation.virtualbox.guest.enable = true;
+  #virtualisation.virtualbox.guest.dragAndDrop = true;
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
