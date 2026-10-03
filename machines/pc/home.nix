@@ -1,9 +1,6 @@
 {
-  inputs,
-  lib,
-  config,
   pkgs,
-  mypkgs,
+  pkgs-unstable,
   globals,
   ...
 }:
@@ -32,7 +29,7 @@
     telegram-desktop
     nicotine-plus
     openttd-jgrpp
-    oscar
+    pkgs-unstable.oscar
     bottles
     obsidian
     google-chrome

@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ pkgs, ... }:
+{ pkgs, globals, ... }:
 
 {
   imports = [
@@ -18,12 +18,17 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  boot.initrd.kernelModules = [ "amdgpu" ];
+  boot.initrd.kernelModules = [
+    "amdgpu"
+    "uinput"
+  ];
   hardware = {
     graphics = {
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
+        gamescope # Virtual micro-compositor for running games headlessly
+        pipewire # Low-latency audio capture
         rocmPackages.clr.icd
       ];
     };
@@ -104,7 +109,7 @@
     };
     transmission = {
       package = pkgs.transmission_4;
-      enable = true; # Enable transmission daemon
+      enable = false; # Enable transmission daemon
       openRPCPort = true; # Open firewall for RPC
       settings = {
         # Override default settings
@@ -120,7 +125,36 @@
         variant = "eng";
       };
     };
+    sunshine = {
+      enable = true;
+      autoStart = true;
+      capSysAdmin = true; # Needed for KMS/screen capture permissions
+      openFirewall = true; # Automatically opens UDP/TCP ports 47984-48010
+    };
   };
+
+  programs.gamescope = {
+    enable = true;
+    capSysNice = true;
+  };
+  systemd.user.services.sunshine = {
+    serviceConfig = {
+      NoNewPrivileges = false;
+      ProtectSystem = false;
+      ProtectHome = false;
+      PrivateTmp = false;
+
+      # Ensure system environment PATH is inherited
+      Environment = [
+        "PATH=/run/wrappers/bin:/run/current-system/sw/bin:/etc/profiles/per-user/%u/bin"
+        "QT_QPA_PLATFORM=offscreen"
+      ];
+    };
+  };
+
+  services.udev.extraRules = ''
+    KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"
+  '';
 
   # Enable CUPS to print documents.
 
@@ -164,6 +198,9 @@
       v4l-utils
       gopro-tool
       # retroarch-full
+      podman-compose
+      ums
+      kdePackages.partitionmanager
     ];
   };
 
@@ -171,15 +208,21 @@
   systemd.services.lactd.wantedBy = [ "multi-user.target" ];
 
   systemd.tmpfiles.rules = [
+    "f /var/lib/systemd/linger/${globals.username} 0644 root root -"
     "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
   ];
-  networking.firewall.allowedUDPPorts = [ 8554 ];
 
   #virtualisation.virtualbox.host.enable = true;
   #users.extraGroups.vboxusers.members = [ "kvineet" ];
   #virtualisation.virtualbox.host.enableExtensionPack = true;
   #virtualisation.virtualbox.guest.enable = true;
   #virtualisation.virtualbox.guest.dragAndDrop = true;
+
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true; # Creates a symlink from docker to podman
+    defaultNetwork.settings.dns_enabled = true; # Required for containers under podman-compose to be able to talk to each other.
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -195,8 +238,16 @@
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [
+    8465
+    5001
+    9001
+  ];
+  networking.firewall.allowedUDPPorts = [
+    8554
+    1900
+  ];
+  # networking.firewall.allowedUDPPorts = [ 1900 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

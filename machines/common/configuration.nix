@@ -20,6 +20,10 @@
     description = "kvineet";
     shell = pkgs.zsh;
     extraGroups = [
+      "uinput"
+      "video"
+      "render"
+      "input"
       "wheel"
       "networkmanager"
       "podman"

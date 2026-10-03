@@ -41,6 +41,10 @@
     let
       # overlays = [ nixgl.overlay ];
       system = "x86_64-linux";
+      pkgs-unstable = import nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
       globals = {
         username = "kvineet";
         winUser = "vinekulkarni";
