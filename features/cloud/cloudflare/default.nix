@@ -12,6 +12,10 @@
         identityFile = "~/.cloudflared/%h-cf_key";
         certificateFile = "~/.cloudflared/%h-cf_key-cert.pub";
       };
+      "kv-vpc.kvineet.in" = {
+        user = "kvineet";
+        proxyCommand = "${pkgs.cloudflared}/bin/cloudflared access ssh --hostname %h";
+      };
     };
   };
 }

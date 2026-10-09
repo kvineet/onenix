@@ -52,66 +52,75 @@
           dotdir = "/home/${globals.username}/projects/onenix";
         };
       };
+      mkNixos = modules: nixpkgs.lib.nixosSystem { inherit system modules; };
+      mkHomeManager =
+        {
+          home,
+          extraSpecialArgs ? { },
+          sharedModules ? [ ],
+          useGlobalPkgs ? false,
+        }:
+        {
+          home-manager = {
+            inherit extraSpecialArgs sharedModules useGlobalPkgs;
+            useUserPackages = true;
+            users.${globals.username} = home;
+          };
+        };
     in
     {
       nixosConfigurations = {
-        seedbox = nixpkgs.lib.nixosSystem {
-          system = system;
-          modules = [
-            disko.nixosModules.disko
-            ./machines/seedbox/configuration.nix
-            sops-nix.nixosModules.sops
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.sharedModules = [ plasma-manager.homeModules.plasma-manager ];
-              home-manager.users.${globals.username} = ./machines/seedbox/home.nix;
-            }
-          ];
-        };
-        msft = nixpkgs.lib.nixosSystem {
-          system = system;
-          modules = [
-            nixos-wsl.nixosModules.default
-            {
-              system.stateVersion = "26.05";
-              wsl = {
-                enable = true;
-                defaultUser = "${globals.username}";
-                docker-desktop.enable = true;
-                wslConf = {
-                  user.default = "${globals.username}";
-                };
+        kv-vpc = mkNixos [
+          disko.nixosModules.disko
+          ./machines/kv-vpc/configuration.nix
+        ];
+        tardis = mkNixos [
+          disko.nixosModules.disko
+          ./machines/tardis/configuration.nix
+        ];
+        seedbox = mkNixos [
+          disko.nixosModules.disko
+          ./machines/seedbox/configuration.nix
+          sops-nix.nixosModules.sops
+          home-manager.nixosModules.home-manager
+          (mkHomeManager {
+            home = ./machines/seedbox/home.nix;
+            useGlobalPkgs = true;
+            sharedModules = [ plasma-manager.homeModules.plasma-manager ];
+          })
+        ];
+        msft = mkNixos [
+          nixos-wsl.nixosModules.default
+          {
+            system.stateVersion = "26.05";
+            wsl = {
+              enable = true;
+              defaultUser = "${globals.username}";
+              docker-desktop.enable = true;
+              wslConf = {
+                user.default = "${globals.username}";
               };
-            }
-            ./machines/msft/configuration.nix
-            # TODO sops-nix.nixosModules.sops
-            home-manager.nixosModules.home-manager
-            {
-              # home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.${globals.username} = ./machines/msft/home.nix;
-              home-manager.extraSpecialArgs = { inherit globals; };
-            }
-          ];
-        };
-        pc = nixpkgs.lib.nixosSystem {
-          system = system;
-          modules = [
-            # TODO disko.nixosModules.disko
-            ./machines/pc/configuration.nix
-            # TODO sops-nix.nixosModules.sops
-            home-manager.nixosModules.home-manager
-            {
-              # home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.${globals.username} = ./machines/pc/home.nix;
-              home-manager.sharedModules = [ plasma-manager.homeModules.plasma-manager ];
-              home-manager.extraSpecialArgs = { inherit globals; };
-            }
-          ];
-        };
+            };
+          }
+          ./machines/msft/configuration.nix
+          # TODO sops-nix.nixosModules.sops
+          home-manager.nixosModules.home-manager
+          (mkHomeManager {
+            home = ./machines/msft/home.nix;
+            extraSpecialArgs = { inherit globals; };
+          })
+        ];
+        pc = mkNixos [
+          # TODO disko.nixosModules.disko
+          ./machines/pc/configuration.nix
+          # TODO sops-nix.nixosModules.sops
+          home-manager.nixosModules.home-manager
+          (mkHomeManager {
+            home = ./machines/pc/home.nix;
+            sharedModules = [ plasma-manager.homeModules.plasma-manager ];
+            extraSpecialArgs = { inherit globals; };
+          })
+        ];
       };
     };
 }

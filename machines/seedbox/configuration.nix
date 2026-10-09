@@ -6,11 +6,10 @@
 }@args:
 {
   imports = [
-    (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
     ./disk-config.nix
     ../common/configuration.nix
-    ../common/configuration-beta.nix
+    ../common/common-beta.nix
     ../../features/podman
     ../../features/podman/services/cloudflare
     # ../../features/podman/services/jellyfin

@@ -1,0 +1,131 @@
+#+title: Tardis storage
+
+* Layout
+- System SSD: 1 GiB UEFI ESP mounted at =/boot=, followed by the
+  single-disk ZFS pool =rpool= with datasets for =/=, =/nix=, and =/home=.
+- Two HDDs: ZFS pool =tank= with a two-disk mirror (RAID1-style redundancy).
+  Usable capacity is approximately that of the smaller HDD; one HDD may fail.
+  The =tank/photos=, =tank/public=, and =tank/nas= datasets are mounted at
+  =/srv/photos=, =/srv/public=, and =/srv/nas= respectively.
+- Cache SSD: dedicated L2ARC read cache for =tank=. It provides no additional
+  storage capacity or redundancy. Losing the cache does not lose pool data.
+- Compression is enabled; encryption and swap are not configured.
+
+The system SSD is not mirrored. Keep backups of both pools: a mirror is not
+a backup. L2ARC also consumes RAM for metadata and may not help every workload.
+
+* Before provisioning
+Replace the four =REPLACE_WITH_...= disk paths in =disk-config.nix= with actual,
+distinct whole-disk =/dev/disk/by-id/= paths (not partition paths). Verify disk
+serial numbers and back up any existing data first. Running disko in
+destroy/format mode will erase all four disks, including the cache SSD.
+
+* NixOS integration
+The Tardis host is not yet registered in the flake. When adding it:
+- Include =disko.nixosModules.disko= in its flake modules.
+- Use =./configuration.nix= as its machine configuration. It imports the disk
+  configuration and sets up UEFI boot and a stable ZFS host ID.
+- Use a kernel supported by the selected ZFS package; avoid blindly selecting
+  =linuxPackages_latest=.
+- Do not duplicate disko-generated filesystem entries in hardware configuration.
+
+The read cache belongs only to =tank=; it does not cache =rpool=.
+
+* ZFS maintenance
+ZFS support is included in the initrd for the root pool. Both pools use 4 KiB
+sector alignment, Zstandard compression, disabled access-time updates, and
+automatic TRIM. NixOS runs a scrub of all pools weekly and a periodic TRIM job.
+Forced root-pool imports are disabled, so a pool that appears active on another
+host will not be imported silently. Keep the configured =networking.hostId=
+stable after provisioning.
+
+* WireGuard
+=configuration.nix= creates =wg0= at =10.100.0.1/24= and opens UDP port
+=51820=. A private key is generated on first boot at
+=/var/lib/wireguard/private.key= with owner-only permissions and is retained
+across rebuilds. Back up this key securely.
+
+Obtain the server public key after the interface starts:
+
+#+begin_src sh
+sudo wg show wg0 public-key
+#+end_src
+
+Add each client public key and a unique =10.100.0.x/32= address to the commented
+=peers= example in =configuration.nix=. This configuration provides access to
+Tardis itself over the tunnel. Routing client traffic to the LAN or internet
+also requires IP forwarding and NAT rules tailored to Tardis's physical network
+interface; those are intentionally not enabled without that interface name.
+
+* mDNS
+Avahi publishes the host as =tardis.local= and advertises its workstation
+service on multicast-capable local interfaces. IPv4 =.local= name resolution is
+enabled through NSS, and the firewall permits mDNS traffic on UDP port 5353.
+
+mDNS normally does not cross routed networks, including WireGuard, unless an
+mDNS reflector or repeater is configured between them.
+
+* NFS
+The three =tank= datasets are exported below an NFSv4 root at =/srv=, only to
+WireGuard clients in =10.100.0.0/24=. TCP port 2049 is allowed exclusively on
+=wg0=; NFS is not exposed on the physical LAN interface. NFSv3 is disabled to
+avoid opening the additional RPC service ports it requires. The =crossmnt=
+option exposes each mounted child dataset through the NFSv4 namespace.
+
+After connecting WireGuard, a Linux client can mount the export with:
+
+#+begin_src sh
+sudo mount -t nfs4 10.100.0.1:/photos /mnt/photos
+sudo mount -t nfs4 10.100.0.1:/public /mnt/public
+sudo mount -t nfs4 10.100.0.1:/nas /mnt/nas
+#+end_src
+
+The export uses =root_squash=. Write access therefore follows the numeric user
+and group ownership and permissions stored on each dataset; configure matching
+UIDs/GIDs or ACLs for clients that need to write. WireGuard peers must also have
+=10.100.0.1/32= (or the tunnel subnet) in their =AllowedIPs=.
+
+* Cloudflare DDNS
+The native Cloudflare DDNS service updates the A and AAAA records for
+=tardis.kvineet.in= at startup and every five minutes. The records are DNS-only
+(not proxied), because Cloudflare's standard proxy does not carry WireGuard UDP
+traffic. Their TTL is 300 seconds.
+
+Create a scoped Cloudflare API token with =Zone:DNS:Edit= and =Zone:Zone:Read=
+for the =kvineet.in= zone. Do not put it in this repository. After activating
+the NixOS configuration, create the service credential file:
+
+#+begin_src sh
+sudo install -d -m 0750 -o cloudflare-ddns -g cloudflare-ddns /var/lib/cloudflare-ddns
+printf '%s\n' 'CLOUDFLARE_API_TOKEN=REPLACE_WITH_TOKEN' | \
+  sudo install -m 0440 -o root -g cloudflare-ddns /dev/stdin \
+    /var/lib/cloudflare-ddns/credentials.env
+sudo systemctl restart cloudflare-ddns
+#+end_src
+
+The service remains inactive while the credential file is absent. Verify it
+with =systemctl status cloudflare-ddns= and confirm both records in Cloudflare.
+Only publish an AAAA record if Tardis has globally reachable IPv6 and UDP 51820
+is allowed by the IPv6 firewall; otherwise set =ip6Domains = [ ];= in the
+service configuration. IPv4 still requires router port forwarding unless
+Tardis owns the public IPv4 address directly.
+
+* SSH
+OpenSSH listens on port 22 and permits public-key authentication for =kvineet=
+using the key declared in =configuration.nix=. Password and keyboard-interactive
+authentication, root login, and X11 forwarding are disabled. Verify that the
+corresponding private key works before ending the installation session:
+
+#+begin_src sh
+ssh kvineet@tardis.local
+#+end_src
+
+The =kvineet= account is a normal user in the =wheel= group. Because it has no
+password and SSH is key-only, members of =wheel= can use =sudo= without a
+password. Access to the declared SSH private key therefore grants full
+administrative access and must be protected accordingly.
+
+Port 22 is currently open on all interfaces to support initial provisioning.
+After WireGuard peers are configured and tested, it can be restricted to =wg0=
+by setting =services.openssh.openFirewall = false= and adding port 22 to
+=networking.firewall.interfaces.wg0.allowedTCPPorts=.
