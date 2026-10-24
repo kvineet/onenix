@@ -39,15 +39,6 @@
   # hardware.graphics.extraPackages32 = with pkgs; [
   #   driversi686Linux.amdvlk
   # ];
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
 
   programs.steam = {
     enable = true;
@@ -78,6 +69,18 @@
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
   services = {
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      nssmdns6 = true;
+
+      publish = {
+        enable = true;
+        addresses = true;
+        domain = true;
+        userServices = true;
+      };
+    };
     desktopManager.plasma6.enable = true;
     displayManager.sddm.enable = true;
     flatpak.enable = true;
@@ -237,19 +240,22 @@
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
-  # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [
-    8465
-    5001
-    9001
-  ];
-  networking.firewall.allowedUDPPorts = [
-    8554
-    1900
-  ];
-  # networking.firewall.allowedUDPPorts = [ 1900 ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  networking = {
+    hostName = "kvpc"; # Define your hostname.
+    # Enable networking
+    networkmanager.enable = true;
+    # Open ports in the firewall.
+    firewall.allowedTCPPorts = [
+      8465
+      5001
+      9001
+    ];
+    firewall.allowedUDPPorts = [
+      8554
+      1900
+      5353 # mDNS
+    ];
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
