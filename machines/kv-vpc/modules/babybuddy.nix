@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  globals,
   ...
 }:
 let
@@ -64,7 +65,7 @@ in
   };
 
   systemd.tmpfiles.rules = [
-    "d /var/lib/babybuddy 0750 kvineet users -"
+    "d /var/lib/babybuddy 0750 ${globals.username} users -"
   ];
 
   virtualisation = {
@@ -81,7 +82,7 @@ in
           PUID = "1000";
           PGID = "100";
           TZ = "Asia/Kolkata";
-          CSRF_TRUSTED_ORIGINS = "http://127.0.0.1:8000,https://babybuddy.kvineet.in";
+          CSRF_TRUSTED_ORIGINS = "http://127.0.0.1:8000,https://babybuddy.${globals.username}";
         };
         volumes = [ "/var/lib/babybuddy:/config" ];
       };

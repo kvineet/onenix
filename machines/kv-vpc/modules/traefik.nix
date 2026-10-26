@@ -1,4 +1,4 @@
-{ ... }:
+{ globals, ... }:
 
 {
   networking.firewall.allowedTCPPorts = [
@@ -37,7 +37,7 @@
     };
     dynamicConfigOptions.http = {
       routers.immich = {
-        rule = "Host(`immich.kvineet.in`)";
+        rule = "Host(\"immich.${globals.domain}\")";
         entryPoints = [ "websecure" ];
         service = "immich";
         tls.certResolver = "letsencrypt";

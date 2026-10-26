@@ -26,7 +26,7 @@ in
       ];
       pull = "always";
       labels = {
-        "in.kvineet.seedbox.service" = "prowlarr";
+        "${globals.revDomainNotation}.seedbox.service" = "prowlarr";
       };
       hostname = "prowlarr";
     };
@@ -42,7 +42,7 @@ in
       ];
       pull = "always";
       labels = {
-        "in.kvineet.seedbox.service" = "radarr";
+        "${globals.revDomainNotation}.seedbox.service" = "radarr";
       };
       hostname = "radarr";
     };
@@ -60,7 +60,7 @@ in
       ];
       pull = "always";
       labels = {
-        "in.kvineet.seedbox.service" = "sonarr";
+        "${globals.revDomainNotation}.seedbox.service" = "sonarr";
       };
       hostname = "sonarr";
     };
@@ -77,7 +77,7 @@ in
       ];
       pull = "always";
       labels = {
-        "in.kvineet.seedbox.service" = "transmission";
+        "${globals.revDomainNotation}.seedbox.service" = "transmission";
       };
       hostname = "transmission";
     };
@@ -90,7 +90,7 @@ in
       };
       pull = "always";
       labels = {
-        "in.kvineet.seedbox.service" = "flaresolverr";
+        "${globals.revDomainNotation}.seedbox.service" = "flaresolverr";
       };
       hostname = "flaresolverr";
     };

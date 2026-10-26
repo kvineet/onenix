@@ -1,19 +1,23 @@
-{ pkgs, mypkgs, ... }:
+{
+  pkgs,
+  globals,
+  ...
+}:
 {
   home.packages = [
     pkgs.cloudflared
   ];
   programs.ssh = {
     settings = {
-      "ssh.kvineet.in" = {
+      "ssh.${globals.domain}" = {
         user = "azureuser";
-        match = ''host ssh.kvineet.in exec "${pkgs.cloudflared}/bin/cloudflared access ssh-gen --hostname %h"'';
+        match = ''host ssh.${globals.domain}" exec "${pkgs.cloudflared}/bin/cloudflared access ssh-gen --hostname %h"'';
         proxyCommand = "${pkgs.cloudflared}/bin/cloudflared access ssh --hostname %h";
         identityFile = "~/.cloudflared/%h-cf_key";
         certificateFile = "~/.cloudflared/%h-cf_key-cert.pub";
       };
-      "kv-vpc.kvineet.in" = {
-        user = "kvineet";
+      "kv-vpc.${globals.domain}" = {
+        user = "${globals.username}";
         proxyCommand = "${pkgs.cloudflared}/bin/cloudflared access ssh --hostname %h";
       };
     };

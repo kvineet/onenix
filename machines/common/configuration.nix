@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  globals,
   modulesPath,
   ...
 }:
@@ -13,9 +14,9 @@
     pkgs.age
     pkgs.nfs-utils
   ];
-  users.users.kvineet = {
+  users.users.${globals.username} = {
     isNormalUser = true;
-    description = "kvineet";
+    description = "${globals.username}";
     shell = pkgs.zsh;
     extraGroups = [
       "uinput"

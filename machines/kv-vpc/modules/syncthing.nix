@@ -1,12 +1,12 @@
-{ ... }:
+{ globals, ... }:
 
 {
   services.syncthing = {
     enable = true;
-    user = "kvineet";
+    user = "${globals.username}";
     group = "users";
-    dataDir = "/home/kvineet";
-    configDir = "/home/kvineet/.config/syncthing";
+    dataDir = "/home/${globals.username}";
+    configDir = "/home/${globals.username}/.config/syncthing";
     guiAddress = "127.0.0.1:8384";
     openDefaultPorts = true;
     overrideDevices = false;

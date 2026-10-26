@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  globals,
   ...
 }:
 let
@@ -22,7 +23,7 @@ in
     ../common/configuration.nix
   ];
 
-  users.users.kvineet.uid = 1000;
+  users.users."${globals.username}".uid = 1000;
   users.users.immich = {
     uid = 980;
     group = "immich";
@@ -114,7 +115,7 @@ in
   ];
 
   systemd.tmpfiles.rules = [
-    "d /srv/photos 2775 kvineet users -"
+    "d /srv/photos 2775 ${globals.username} users -"
     "d /srv/photos/immich 0700 immich immich -"
   ];
 
@@ -136,7 +137,7 @@ in
     cloudflare-ddns = {
       enable = true;
       credentialsFile = cloudflareCredentialsFile;
-      domains = [ "tardis.kvineet.in" ];
+      domains = [ "tardis.${globals.domain}" ];
       proxied = "false";
       ttl = 300;
       updateCron = "@every 5m";

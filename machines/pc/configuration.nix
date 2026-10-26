@@ -102,9 +102,9 @@
     sonarr = {
       enable = false;
       openFirewall = true;
-      user = "kvineet";
+      user = "${globals.username}";
       group = "users";
-      dataDir = "/home/kvineet/Downloads/";
+      dataDir = "${globals.dirs.downloads}";
     };
     prowlarr = {
       enable = false;
@@ -216,7 +216,7 @@
   ];
 
   #virtualisation.virtualbox.host.enable = true;
-  #users.extraGroups.vboxusers.members = [ "kvineet" ];
+  #users.extraGroups.vboxusers.members = [ "${globals.username}" ];
   #virtualisation.virtualbox.host.enableExtensionPack = true;
   #virtualisation.virtualbox.guest.enable = true;
   #virtualisation.virtualbox.guest.dragAndDrop = true;

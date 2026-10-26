@@ -1,4 +1,4 @@
-{ modulesPath, ... }:
+{ modulesPath, globals, ... }:
 {
   imports = [
     "${modulesPath}/virtualisation/azure-common.nix"
@@ -15,7 +15,7 @@
     ./modules/wireguard.nix
   ];
 
-  users.users.kvineet.uid = 1000;
+  users.users."${globals.username}".uid = 1000;
 
   networking.hostName = "kv-vpc";
 

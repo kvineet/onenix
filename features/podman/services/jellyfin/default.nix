@@ -1,7 +1,5 @@
 {
-  config,
-  lib,
-  pkgs,
+  globals,
   ...
 }:
 
@@ -17,7 +15,7 @@
       ];
       pull = "always";
       labels = {
-        "in.kvineet.seedbox.service" = "jellyfin";
+        "${globals.revDomainNotation}.seedbox.service" = "jellyfin";
       };
       hostname = "jellyfin";
     };

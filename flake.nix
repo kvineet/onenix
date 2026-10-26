@@ -49,6 +49,8 @@
         username = "kvineet";
         winUser = "vinekulkarni";
         name = "Vineet Kulkarni";
+        domain = "kvineet.in";
+        revDomainNotation = "${globals.revDomainNotation}";
         dirs = {
           downloads = "/home/${globals.username}/Downloads";
           webdav = "/srv/webDav";

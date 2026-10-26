@@ -1,4 +1,4 @@
-{ ... }:
+{ globals, ... }:
 
 {
   users.users.immich.uid = 980;
@@ -11,7 +11,7 @@
     host = "127.0.0.1";
     mediaLocation = "/datadisk/immich";
     openFirewall = false;
-    settings.server.externalDomain = "https://immich.kvineet.in";
+    settings.server.externalDomain = "https://immich.${globals.username}";
   };
 
   fileSystems = {

@@ -21,7 +21,7 @@
       ];
       pull = "always";
       labels = {
-        "in.kvineet.seedbox.service" = "home-assistant";
+        "${globals.revDomainNotation}.seedbox.service" = "home-assistant";
       };
       hostname = "homeassistant";
     };
