@@ -204,6 +204,7 @@
       podman-compose
       ums
       kdePackages.partitionmanager
+      soundwireserver
     ];
   };
 
