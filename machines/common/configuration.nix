@@ -1,11 +1,9 @@
 {
-  config,
   lib,
   pkgs,
-  globals,
   modulesPath,
   ...
-}@args:
+}:
 {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
@@ -29,7 +27,7 @@
       "podman"
     ];
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE9cZDQjzlmMTw2PStQMWlk+XbLfP4KMKeKM3C9izsyf kvineet@kvineet-pc"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDB7inOqeP6sIoEAAjoIt2+T8ymCBHtqdcGjppim6zI8 vineet.kulkarni8@gmail.com"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIINkEmmoJ9hJXfbHL/mFjxbWKIwPGoB/dhL5TyQGe8Cr MSFT_kvineet"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHdGV58h+hnSpPOr3EcaQqD0W2Ss4oRwZ8oeua9QVAsG"
     ];

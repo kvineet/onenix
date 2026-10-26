@@ -56,17 +56,29 @@
           dotdir = "/home/${globals.username}/projects/onenix";
         };
       };
-      mkNixos = modules: nixpkgs.lib.nixosSystem { inherit system modules; };
+      mkNixos =
+        modules:
+        nixpkgs.lib.nixosSystem {
+          inherit
+            system
+            modules
+            ;
+          specialArgs = { inherit globals pkgs-unstable; };
+        };
       mkHomeManager =
         {
           home,
-          extraSpecialArgs ? { },
+          extraSpecialArgs ? { inherit globals pkgs-unstable; },
           sharedModules ? [ ],
           useGlobalPkgs ? false,
         }:
         {
           home-manager = {
-            inherit extraSpecialArgs sharedModules useGlobalPkgs;
+            inherit
+              extraSpecialArgs
+              sharedModules
+              useGlobalPkgs
+              ;
             useUserPackages = true;
             users.${globals.username} = home;
           };
@@ -111,7 +123,6 @@
           home-manager.nixosModules.home-manager
           (mkHomeManager {
             home = ./machines/msft/home.nix;
-            extraSpecialArgs = { inherit globals; };
           })
         ];
         pc = mkNixos [
@@ -122,7 +133,6 @@
           (mkHomeManager {
             home = ./machines/pc/home.nix;
             sharedModules = [ plasma-manager.homeModules.plasma-manager ];
-            extraSpecialArgs = { inherit globals; };
           })
         ];
       };
