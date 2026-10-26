@@ -4,9 +4,9 @@ This runbook creates a temporary Ubuntu VM in an Azure VNet and replaces its
 operating system with the `kv-vpc` NixOS configuration by using
 `nixos-anywhere`.
 
-The installation is destructive. Disko will erase the disk configured as
-`/dev/sda` in `disk-config.nix`. Verify the Azure OS disk device before running
-the installation.
+The installation is destructive. Disko will erase the OS disk at `/dev/sda`
+and the managed data disk at `/dev/disk/azure/scsi1/lun0` as configured in
+`disk-config.nix`. Verify both devices before running the installation.
 
 ## 1. Prerequisites
 
@@ -57,6 +57,8 @@ export NSG="kv-vpc-nsg"
 export PUBLIC_IP="kv-vpc-ip"
 export NIC="kv-vpc-nic"
 export VM="kv-vpc"
+export DATA_DISK="kv-vpc-data"
+export DATA_DISK_SIZE_GB=32
 export ADMIN_USER="azureuser"
 export SSH_PUBLIC_KEY="$HOME/.ssh/id_ed25519.pub"
 ```
@@ -169,6 +171,19 @@ az vm create \
   --ssh-key-values "$SSH_PUBLIC_KEY"
 ```
 
+Create and attach the managed data disk at LUN 0:
+
+```bash
+az vm disk attach \
+  --resource-group "$RESOURCE_GROUP" \
+  --vm-name "$VM" \
+  --name "$DATA_DISK" \
+  --new \
+  --size-gb "$DATA_DISK_SIZE_GB" \
+  --sku StandardSSD_LRS \
+  --lun 0
+```
+
 Retrieve its addresses:
 
 ```bash
@@ -209,14 +224,16 @@ Inspect every block device carefully:
 ```bash
 lsblk -o NAME,PATH,SIZE,TYPE,FSTYPE,MOUNTPOINTS,MODEL
 findmnt /
+readlink -f /dev/disk/azure/scsi1/lun0
 ```
 
-The repository currently configures `/dev/sda` as the OS disk. Continue only
-if `/dev/sda` is the persistent Azure OS disk containing the current root
-filesystem.
+The repository configures `/dev/sda` as the OS disk and LUN 0 as the data
+disk. Continue only if `/dev/sda` is the persistent Azure OS disk containing
+the current root filesystem and `/dev/disk/azure/scsi1/lun0` resolves to the
+new 32 GiB managed disk.
 
 Azure may also provide an ephemeral resource disk. Never select that disk as
-the NixOS system disk. If the OS disk is not `/dev/sda`, update
+either Disko target. If either device is incorrect, update
 `machines/kv-vpc/disk-config.nix` before continuing.
 
 Exit the VM:

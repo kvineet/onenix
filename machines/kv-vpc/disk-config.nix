@@ -27,4 +27,20 @@
       };
     };
   };
+
+  disko.devices.disk.datadisk = {
+    device = "/dev/disk/azure/scsi1/lun0";
+    type = "disk";
+    content = {
+      type = "gpt";
+      partitions.data = {
+        size = "100%";
+        content = {
+          type = "filesystem";
+          format = "ext4";
+          mountpoint = "/datadisk";
+        };
+      };
+    };
+  };
 }
