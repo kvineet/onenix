@@ -162,7 +162,15 @@
   # Enable CUPS to print documents.
 
   # Enable sound with pipewire.
-  security.rtkit.enable = true;
+  security = {
+    rtkit.enable = true;
+    wrappers.sunshine = {
+      owner = "root";
+      group = "root";
+      capabilities = "cap_sys_admin+p";
+      source = "${pkgs.sunshine}/bin/sunshine";
+    };
+  };
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -244,16 +252,29 @@
     hostName = "kvpc"; # Define your hostname.
     # Enable networking
     networkmanager.enable = true;
+    interfaces = {
+      "enp8s0" = {
+        wakeOnLan = {
+          enable = true;
+          policy = [
+            "magic"
+          ];
+        };
+      };
+    };
     # Open ports in the firewall.
     firewall.allowedTCPPorts = [
       8465
       5001
       9001
+      48010 # sunshine
     ];
     firewall.allowedUDPPorts = [
       8554
       1900
       5353 # mDNS
+      48000 # sunshine
+      48010 # sunshine
     ];
   };
 
