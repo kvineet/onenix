@@ -50,7 +50,7 @@
         winUser = "vinekulkarni";
         name = "Vineet Kulkarni";
         domain = "kvineet.in";
-        revDomainNotation = "${globals.revDomainNotation}";
+        revDomainNotation = "in.kvineet";
         dirs = {
           downloads = "/home/${globals.username}/Downloads";
           webdav = "/srv/webDav";
@@ -95,6 +95,10 @@
         tardis = mkNixos [
           disko.nixosModules.disko
           ./machines/tardis/configuration.nix
+          home-manager.nixosModules.home-manager
+          (mkHomeManager {
+            home = ./machines/tardis/home.nix;
+          })
         ];
         seedbox = mkNixos [
           disko.nixosModules.disko

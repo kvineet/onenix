@@ -9,8 +9,8 @@
 {
   # You can import other home-manager modules here
   imports = [
+    ../minimal/home.nix
     ../../features/dotetc
-    ../../features/shell
     ../../features/emacs
     ../../features/neovim
     ../../features/cloud/cloudflare
@@ -20,7 +20,6 @@
   ];
 
   nixpkgs = {
-    # You can add overlays here
     overlays = [
       # Work around a packaging bug in newer VS Code releases where the
       # ripgrep cleanup path is missing during patchPhase.
@@ -40,65 +39,16 @@
               + "rm -rf resources/app/node_modules/@vscode/ripgrep/bin/rg || true";
         });
       })
-      # If you want to use overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
     ];
-    # Configure your nixpkgs instance
-    config = {
-      # Disable if you don't want unfree packages
-      allowUnfree = true;
-      # Workaround for https://github.com/nix-community/home-manager/issues/2942
-      allowUnfreePredicate = _: true;
-    };
   };
-
   home = {
-    username = "${globals.username}";
-    homeDirectory = "/home/${globals.username}";
-  };
-
-  # Add stuff for your user as you see fit:
-  # programs.neovim.enable = true;
-  # home.packages = with pkgs; [ steam ];
-
-  # Enable home-manager
-  programs.home-manager.enable = true;
-  home = {
-    stateVersion = "23.05";
     packages = with pkgs; [
-      rar
-      fzf
-      jq
-      yq-go
       go
       gh
     ];
   };
-  # Nicely reload system units when changing configs
-  systemd.user.startServices = "sd-switch";
   programs.ssh = {
-    enable = true;
-    enableDefaultConfig = false;
     settings = {
-      "*" = {
-        forwardAgent = false;
-        serverAliveInterval = 0;
-        serverAliveCountMax = 3;
-        compression = false;
-        addKeysToAgent = "no";
-        hashKnownHosts = false;
-        userKnownHostsFile = "~/.ssh/known_hosts";
-        controlMaster = "no";
-        controlPath = "~/.ssh/master-%r@%n:%p";
-        controlPersist = "no";
-      };
       "github.com-kvineet" = {
         hostname = "github.com";
         user = "git";

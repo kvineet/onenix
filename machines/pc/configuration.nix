@@ -12,16 +12,21 @@
   ];
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    loader = {
+      timeout = 0;
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    # Use latest kernel.
+    kernelPackages = pkgs.linuxPackages_latest;
 
-  # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+    initrd.kernelModules = [
+      "amdgpu"
+      "uinput"
+    ];
+  };
 
-  boot.initrd.kernelModules = [
-    "amdgpu"
-    "uinput"
-  ];
   hardware = {
     graphics = {
       enable = true;
