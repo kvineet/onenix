@@ -164,12 +164,6 @@
   # Enable sound with pipewire.
   security = {
     rtkit.enable = true;
-    wrappers.sunshine = {
-      owner = "root";
-      group = "root";
-      capabilities = "cap_sys_admin+p";
-      source = "${pkgs.sunshine}/bin/sunshine";
-    };
   };
 
   # Enable touchpad support (enabled default in most desktopManager).

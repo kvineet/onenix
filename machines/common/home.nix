@@ -22,6 +22,24 @@
   nixpkgs = {
     # You can add overlays here
     overlays = [
+      # Work around a packaging bug in newer VS Code releases where the
+      # ripgrep cleanup path is missing during patchPhase.
+      (final: prev: {
+        vscode-fhs = prev.vscode-fhs.overrideAttrs (old: {
+          postPatch =
+            let
+              patched = lib.replaceStrings
+                [ "rm -rf resources/app/node_modules/@vscode/ripgrep/bin/rg" ]
+                [ "rm -rf resources/app/node_modules/@vscode/ripgrep/bin/rg || true" ]
+                (old.postPatch or "");
+            in
+            if builtins.isString (old.postPatch or null) then
+              patched
+            else
+              ""
+              + "rm -rf resources/app/node_modules/@vscode/ripgrep/bin/rg || true";
+        });
+      })
       # If you want to use overlays exported from other flakes:
       # neovim-nightly-overlay.overlays.default
 
