@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  helpers,
   ...
 }:
 let
@@ -26,7 +27,7 @@ in
       ];
       pull = "always";
       labels = {
-        "${globals.revDomainNotation}.seedbox.service" = "prowlarr";
+        "${helpers.revDomainNotation}.seedbox.service" = "prowlarr";
       };
       hostname = "prowlarr";
     };
@@ -42,7 +43,7 @@ in
       ];
       pull = "always";
       labels = {
-        "${globals.revDomainNotation}.seedbox.service" = "radarr";
+        "${helpers.revDomainNotation}.seedbox.service" = "radarr";
       };
       hostname = "radarr";
     };
@@ -60,7 +61,7 @@ in
       ];
       pull = "always";
       labels = {
-        "${globals.revDomainNotation}.seedbox.service" = "sonarr";
+        "${helpers.revDomainNotation}.seedbox.service" = "sonarr";
       };
       hostname = "sonarr";
     };
@@ -77,7 +78,7 @@ in
       ];
       pull = "always";
       labels = {
-        "${globals.revDomainNotation}.seedbox.service" = "transmission";
+        "${helpers.revDomainNotation}.seedbox.service" = "transmission";
       };
       hostname = "transmission";
     };
@@ -90,7 +91,7 @@ in
       };
       pull = "always";
       labels = {
-        "${globals.revDomainNotation}.seedbox.service" = "flaresolverr";
+        "${helpers.revDomainNotation}.seedbox.service" = "flaresolverr";
       };
       hostname = "flaresolverr";
     };

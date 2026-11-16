@@ -1,4 +1,4 @@
-{ globals, ... }:
+{ globals, pkgs-unstable, ... }:
 
 {
   users.users.immich.uid = 980;
@@ -7,6 +7,7 @@
   boot.supportedFilesystems = [ "nfs" ];
 
   services.immich = {
+    package = pkgs-unstable.immich;
     enable = true;
     host = "127.0.0.1";
     mediaLocation = "/datadisk/immich";

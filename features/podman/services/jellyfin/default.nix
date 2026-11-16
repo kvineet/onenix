@@ -1,5 +1,5 @@
 {
-  globals,
+  helpers,
   ...
 }:
 
@@ -15,7 +15,7 @@
       ];
       pull = "always";
       labels = {
-        "${globals.revDomainNotation}.seedbox.service" = "jellyfin";
+        "${helpers.revDomainNotation}.seedbox.service" = "jellyfin";
       };
       hostname = "jellyfin";
     };

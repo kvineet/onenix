@@ -6,25 +6,38 @@
 
 {
   imports = [
-    # Include the results of the hardware scan.
-    ./hardware-configuration.nix
+    ./disk-config.nix
     ../common/configuration.nix
   ];
 
-  # Bootloader.
   boot = {
+    initrd = {
+      availableKernelModules = [
+        "nvme"
+        "xhci_pci"
+        "ahci"
+        "usbhid"
+        "sd_mod"
+      ];
+      kernelModules = [
+        "amdgpu"
+        "uinput"
+      ];
+    };
     loader = {
       timeout = 0;
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    # Use latest kernel.
     kernelPackages = pkgs.linuxPackages_latest;
-
-    initrd.kernelModules = [
-      "amdgpu"
-      "uinput"
+    kernelModules = [
+      "kvm-amd"
+      "v4l2loopback"
     ];
+    extraModulePackages = [
+      pkgs.linuxPackages_latest.v4l2loopback
+    ];
+    supportedFilesystems = [ "nfs" ];
   };
 
   hardware = {
@@ -194,6 +207,7 @@
       #  wget
       git
       clinfo
+      nfs-utils
       kdePackages.yakuake
       lact
       fusee-nano
@@ -275,6 +289,23 @@
       48000 # sunshine
       48010 # sunshine
     ];
+  };
+
+  fileSystems = {
+    "/mnt/nas" = {
+      device = "192.168.68.113:/nas";
+      fsType = "nfs4";
+      options = [
+        "rw"
+        "vers=4.1"
+        "_netdev"
+        "noauto"
+        "nofail"
+        "x-systemd.automount"
+        "x-systemd.idle-timeout=10min"
+        "x-systemd.mount-timeout=30s"
+      ];
+    };
   };
 
   # This value determines the NixOS release from which the default

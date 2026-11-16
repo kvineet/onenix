@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  helpers,
   ...
 }:
 
@@ -21,7 +22,7 @@
       ];
       pull = "always";
       labels = {
-        "${globals.revDomainNotation}.seedbox.service" = "home-assistant";
+        "${helpers.revDomainNotation}.seedbox.service" = "home-assistant";
       };
       hostname = "homeassistant";
     };

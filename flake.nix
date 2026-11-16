@@ -50,7 +50,6 @@
         winUser = "vinekulkarni";
         name = "Vineet Kulkarni";
         domain = "kvineet.in";
-        revDomainNotation = "in.kvineet";
         dirs = {
           downloads = "/home/${globals.username}/Downloads";
           webdav = "/srv/webDav";
@@ -58,89 +57,49 @@
           dotdir = "/home/${globals.username}/projects/onenix";
         };
       };
-      mkNixos =
-        modules:
-        nixpkgs.lib.nixosSystem {
-          inherit
-            system
-            modules
-            ;
-          specialArgs = { inherit globals pkgs-unstable; };
-        };
-      mkHomeManager =
-        {
-          home,
-          extraSpecialArgs ? { inherit globals pkgs-unstable; },
-          sharedModules ? [ ],
-          useGlobalPkgs ? false,
-        }:
-        {
-          home-manager = {
-            inherit
-              extraSpecialArgs
-              sharedModules
-              useGlobalPkgs
-              ;
-            useUserPackages = true;
-            users.${globals.username} = home;
-          };
-        };
+      helpers = import ./lib/helpers.nix {
+        lib = nixpkgs.lib;
+        inherit globals home-manager pkgs-unstable system;
+        inherit nixpkgs nixos-wsl;
+      };
     in
     {
       nixosConfigurations = {
-        kv-vpc = mkNixos [
+        kv-vpc = helpers.mkNixos [
           disko.nixosModules.disko
           ./machines/kv-vpc/configuration.nix
         ];
-        tardis = mkNixos [
-          disko.nixosModules.disko
-          ./machines/tardis/configuration.nix
-          home-manager.nixosModules.home-manager
-          (mkHomeManager {
+        tardis = helpers.mkNixos (
+          [
+            disko.nixosModules.disko
+            ./machines/tardis/configuration.nix
+          ] ++ (helpers.mkHomeManager {
             home = ./machines/tardis/home.nix;
           })
-        ];
-        seedbox = mkNixos [
+        );
+        seedbox = helpers.mkNixos [
           disko.nixosModules.disko
           ./machines/seedbox/configuration.nix
           sops-nix.nixosModules.sops
-          home-manager.nixosModules.home-manager
-          (mkHomeManager {
-            home = ./machines/seedbox/home.nix;
-            useGlobalPkgs = true;
-            sharedModules = [ plasma-manager.homeModules.plasma-manager ];
-          })
         ];
-        msft = mkNixos [
-          nixos-wsl.nixosModules.default
-          {
-            system.stateVersion = "26.05";
-            wsl = {
-              enable = true;
-              defaultUser = "${globals.username}";
-              docker-desktop.enable = true;
-              wslConf = {
-                user.default = "${globals.username}";
-              };
-            };
-          }
-          ./machines/msft/configuration.nix
-          # TODO sops-nix.nixosModules.sops
-          home-manager.nixosModules.home-manager
-          (mkHomeManager {
+        msft = helpers.mkWslNixos (
+          [
+            ./machines/msft/configuration.nix
+            # TODO sops-nix.nixosModules.sops
+          ] ++ (helpers.mkHomeManager {
             home = ./machines/msft/home.nix;
           })
-        ];
-        pc = mkNixos [
-          # TODO disko.nixosModules.disko
-          ./machines/pc/configuration.nix
-          # TODO sops-nix.nixosModules.sops
-          home-manager.nixosModules.home-manager
-          (mkHomeManager {
+        );
+        pc = helpers.mkNixos (
+          [
+            disko.nixosModules.disko
+            ./machines/pc/configuration.nix
+            # TODO sops-nix.nixosModules.sops
+          ] ++ (helpers.mkHomeManager {
             home = ./machines/pc/home.nix;
             sharedModules = [ plasma-manager.homeModules.plasma-manager ];
           })
-        ];
+        );
       };
     };
 }
