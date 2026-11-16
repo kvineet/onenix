@@ -51,22 +51,22 @@
     };
   };
 
-  fileSystems = {
-    "/mnt/nas" = {
-      device = "192.168.68.113:/nas";
-      fsType = "nfs4";
-      options = [
-        "rw"
-        "vers=4.1"
-        "_netdev"
-        "noauto"
-        "nofail"
-        "x-systemd.automount"
-        "x-systemd.idle-timeout=10min"
-        "x-systemd.mount-timeout=30s"
-      ];
-    };
-  };
+  # fileSystems = {
+  #   "/mnt/nas" = {
+  #     device = "192.168.68.113:/nas";
+  #     fsType = "nfs4";
+  #     options = [
+  #       "rw"
+  #       "vers=4.1"
+  #       "_netdev"
+  #       "noauto"
+  #       "nofail"
+  #       "x-systemd.automount"
+  #       "x-systemd.idle-timeout=10min"
+  #       "x-systemd.mount-timeout=30s"
+  #     ];
+  #   };
+  # };
 
   swapDevices = [ ];
 
